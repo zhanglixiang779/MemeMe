@@ -12,8 +12,8 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate,
     
     // MARK: App Constants
     
-    let topText = "TOP"
-    let bottomText = "BOTTOM"
+    let topInitialText = "TOP"
+    let bottomInitialText = "BOTTOM"
     let emptyText = ""
     
     let memeTextAttributes: [NSAttributedString.Key: Any] = [
@@ -61,8 +61,8 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate,
     
     // Cancel button on the top toolbar
     @IBAction func reset(_ sender: Any) {
-        topTextField.text = topText
-        bottomTextField.text = bottomText
+        topTextField.text = topInitialText
+        bottomTextField.text = bottomInitialText
         shareButton.isEnabled = false
         imagePickerView.image = nil
     }
@@ -101,12 +101,12 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate,
     }
     
     func textFieldShouldBeginEditing(_ textField: UITextField) -> Bool {
-        if textField == topTextField, textField.text == topText {
-            topTextField.text = ""
+        if textField == topTextField, textField.text == topInitialText {
+            topTextField.text = emptyText
         }
         
-        if textField == bottomTextField && textField.text == bottomText {
-            bottomTextField.text = ""
+        if textField == bottomTextField && textField.text == bottomInitialText {
+            bottomTextField.text = emptyText
         }
         
         return true
@@ -114,11 +114,11 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate,
     
     func textFieldShouldReturn(_ textField: UITextField) -> Bool {
         if textField == topTextField, textField.text == emptyText {
-            topTextField.text = topText
+            topTextField.text = topInitialText
         }
         
         if textField == bottomTextField && textField.text == emptyText {
-            bottomTextField.text = bottomText
+            bottomTextField.text = bottomInitialText
         }
         
         textField.resignFirstResponder()
@@ -128,11 +128,11 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate,
     // MARK: Private Methods
     
     private func initViews() {
-        topTextField.text = topText
+        topTextField.text = topInitialText
         topTextField.textAlignment = .center /* I am not sure why it doesn't work */
         topTextField.delegate = self
         topTextField.defaultTextAttributes = memeTextAttributes
-        bottomTextField.text = bottomText
+        bottomTextField.text = bottomInitialText
         bottomTextField.textAlignment = .center /* I am not sure why it doesn't work */
         bottomTextField.delegate = self
         bottomTextField.defaultTextAttributes = memeTextAttributes
