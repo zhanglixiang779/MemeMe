@@ -53,6 +53,7 @@ class MemeMeMediaViewController: UIViewController, UIImagePickerControllerDelega
         activityViewController.completionWithItemsHandler = { activityType, completed, returnedItems, error in
             if completed {
                 self.save()
+                self.navigationController?.popViewController(animated: true)
             }
         }
         
