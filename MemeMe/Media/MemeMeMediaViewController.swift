@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  MemeMeMediaViewController.swift
 //  MemeMe
 //
 //  Created by Lixiang Zhang on 12/21/20.
@@ -7,7 +7,7 @@
 
 import UIKit
 
-class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate,
+class MemeMeMediaViewController: UIViewController, UIImagePickerControllerDelegate,
         UINavigationControllerDelegate, UITextFieldDelegate {
     
     // MARK: App Constants
@@ -61,27 +61,28 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate,
     
     // Cancel button on the top toolbar
     @IBAction func reset(_ sender: Any) {
-        topTextField.text = topInitialText
-        bottomTextField.text = bottomInitialText
-        shareButton.isEnabled = false
-        imagePickerView.image = nil
+        navigationController?.popViewController(animated: true)
     }
     
-    // MARK: Overriden Methods
-    
-    override func viewWillAppear(_ animated: Bool) {
-        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
-        shareButton.isEnabled = false
-        subscribeToKeyboardNotifications()
-    }
+    // MARK: UIViewController Lifecycle
     
     override func viewDidLoad() {
         super.viewDidLoad()
         initViews()
     }
-
+    
+    override func viewWillAppear(_ animated: Bool) {
+        subscribeToKeyboardNotifications()
+        cameraButton.isEnabled = UIImagePickerController.isSourceTypeAvailable(.camera)
+        shareButton.isEnabled = false
+        tabBarController?.tabBar.isHidden = true
+        navigationController?.navigationBar.isHidden = true
+    }
+    
     override func viewWillDisappear(_ animated: Bool) {
         unsubscribeToKeyboardNotifications()
+        tabBarController?.tabBar.isHidden = false
+        navigationController?.navigationBar.isHidden = false
     }
     
     // MARK: Protocol Conformance
@@ -129,11 +130,11 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate,
     
     private func initViews() {
         topTextField.text = topInitialText
-        topTextField.textAlignment = .center /* I am not sure why it doesn't work */
+        topTextField.textAlignment = .center
         topTextField.delegate = self
         topTextField.defaultTextAttributes = memeTextAttributes
         bottomTextField.text = bottomInitialText
-        bottomTextField.textAlignment = .center /* I am not sure why it doesn't work */
+        bottomTextField.textAlignment = .center
         bottomTextField.delegate = self
         bottomTextField.defaultTextAttributes = memeTextAttributes
     }
@@ -163,6 +164,7 @@ class MemeMeViewController: UIViewController, UIImagePickerControllerDelegate,
     private func save() {
         let meme = Meme(topText: topTextField.text!, bottomText: bottomTextField.text!, originalImage: imagePickerView.image!, memedImage: generateMemedImage())
         UIImageWriteToSavedPhotosAlbum(meme.memedImage, nil, nil, nil)
+        (UIApplication.shared.delegate as? AppDelegate)?.memes.append(meme)
     }
     
     private func generateMemedImage() -> UIImage {
